@@ -16,9 +16,16 @@ use derive_more::derive::{Display, Error};
 
 /// A small wrapper for [`BoxedSystem`] that also keeps track whether or not the system has been initialized.
 #[derive(Component)]
-struct RegisteredSystem<I, O> {
+pub struct RegisteredSystem<I = (), O = ()> {
     initialized: bool,
     system: BoxedSystem<I, O>,
+}
+
+impl<I, O> RegisteredSystem<I, O> {
+    /// Access stored [`System`].
+    pub fn system(&self) -> &dyn System<In = I, Out = O> {
+        &*self.system
+    }
 }
 
 /// Marker [`Component`](bevy_ecs::component::Component) for identifying [`SystemId`] [`Entity`]s.
